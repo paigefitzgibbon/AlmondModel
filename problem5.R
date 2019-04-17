@@ -19,9 +19,9 @@ problemfive = function(year,temp, precip_low,precip_high) {
   output1 <-  mapply( function(year,temp,precip_low) {
     problem1(year,temp,precip_low)
   }, clim_sens$year ,clim_sens$temp,clim_sens$precip_low )
-  as.data.frame(output1)
+  as.matrix(output1)
   df <-      t(output1)
-  as.data.frame(df)
+  as.tbl(df)
   colnames(df) <- c("Year","Anomoly")
   
   output2 <-  mapply( function(year,temp,precip_high) {
@@ -29,11 +29,11 @@ problemfive = function(year,temp, precip_low,precip_high) {
   }, clim_sens$year ,clim_sens$temp,clim_sens$precip_high )
   as.data.frame(output2)
   df1 <- t(output2)
-  as.data.frame(df1)
+  as.tbl(df1)
   colnames(df1) <- c("Year","Anomoly")
-df2<- data.frame(df$Year, df$Anomoly, df1$Anomoly)
+df2<- full_join(df,df1,by="Year")
 colnames(df2) <- c("Year", "Lower Bound", "Upper Bound")
-  
+
   
   return(ggplot()
          +geom_line(df2, aes(Year, "Lower Bound"))
